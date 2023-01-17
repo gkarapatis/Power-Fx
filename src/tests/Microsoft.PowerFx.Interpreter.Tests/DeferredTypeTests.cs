@@ -121,6 +121,47 @@ namespace Microsoft.PowerFx.Interpreter
 
         [Fact]
 
+        // Ensures the validation returns the correct type despite the deferred type.
+        public void DeferredTypeTest_ReturnedType()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("X", FormulaType.Deferred);
+            symbolTable.AddVariable("N", FormulaType.Number);
+
+            var config = new PowerFxConfig(Features.None)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("N - X");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(result.ReturnType, FormulaType.Number);
+        }
+
+        [Fact]
+
+        // Ensures Table schema errors are discarted.
+        public void DeferredTypeTest_OmitsTableErrors()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("X", FormulaType.Deferred);
+
+            var config = new PowerFxConfig(Features.None)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("Table({'prop1':{'nestedprop':10}}, {'prop1':X})");
+
+            Assert.True(result.IsSuccess);
+            Assert.IsType<TableType>(result.ReturnType);
+        }
+
+        [Fact]
+
         // Construction of aggregate type is not allowed around Deferred Type
         public void DeferredTypeNotSupportedInAggregate()
         {
