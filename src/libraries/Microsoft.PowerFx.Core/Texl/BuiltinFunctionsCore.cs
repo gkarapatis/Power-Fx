@@ -97,6 +97,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction GUID_UO = _library.Append(new GUIDPureFunction_UO());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
+
+        public static readonly TexlFunction ReadCell = _library.Append(new ReadCell());
+
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
         public static readonly TexlFunction Index = _library.Append(new IndexFunction());
         public static readonly TexlFunction Index_UO = _library.Append(new IndexFunction_UO());

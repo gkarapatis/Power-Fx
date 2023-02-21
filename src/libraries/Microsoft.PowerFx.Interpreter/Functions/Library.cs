@@ -704,6 +704,10 @@ namespace Microsoft.PowerFx.Functions
                 If
             },
             {
+                BuiltinFunctionsCore.ReadCell,
+                ReadCell
+            },
+            {
                 BuiltinFunctionsCore.IfError,
                 IfError
             },
@@ -1783,6 +1787,20 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // If there's no value here, then use blank. 
+            return new BlankValue(irContext);
+        }
+
+        public static async ValueTask<FormulaValue> ReadCell(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is TableValue table && args[1] is NumberValue num && args[2] is NumberValue num2)
+            {
+                var record = table.Rows.ElementAt(Convert.ToInt32(num.Value)).ToFormulaValue() as RecordValue;
+
+                var value = record.Fields.ElementAt(Convert.ToInt32(num2.Value)).Value;
+
+                return value;
+            }
+
             return new BlankValue(irContext);
         }
 
